@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ML API</title>
+
+    <style>
+        body {
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+
+        .button_css {
+            color: #494949 !important;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: #ffffff;
+            padding: 20px;
+            border: 4px solid #494949 !important;
+            display: inline-block;
+            transition: all 0.4s ease 0s;
+            margin-bottom: 20px;
+        }
+
+        .button_css:hover {
+            color: #ffffff !important;
+            background: #f6b93b;
+            border-color: #f6b93b !important;
+            transition: all 0.4s ease 0s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login">
+        <center>
+            <br><br><br><br><br><br><br><br><br><br><br>
+            <form id="prediction-form">
+                <h1>Enter the value of heart features >>></h1>
+                <input type="text" id="age" name="age" placeholder="age" required="required" />
+                <input type="text" id="trestbps" name="trestbps" placeholder="BP" required="required" />
+                <input type="text" id="chol" name="chol" placeholder="cholestrol" required="required" />
+                <input type="text" id="thalach" name="thalach" placeholder="thalach" required="required" />
+                <input type="text" id="oldpeak" name="oldpeak" placeholder="oldpeak" required="required" /><br><br>
+                <input type="text" id="sex" name="sex" placeholder="sex" required="required" />
+                <input type="text" id="cp" name="cp" placeholder="chest pain" required="required" />
+                <input type="text" id="fbs" name="fbs" placeholder="fbs" required="required" />
+                <input type="text" id="restecg" name="restecg" placeholder="restecg" required="required" />
+                <input type="text" id="exang" name="exang" placeholder="exang" required="required" /><br><br>
+                <input type="text" id="slope_1" name="slope_1" placeholder="slope_1" required="required" />
+                <input type="text" id="slope_2" name="slope_2" placeholder="slope_2" required="required" />
+                <input type="text" id="ca_1" name="ca_1" placeholder="ca_1" required="required" />
+                <input type="text" id="ca_2" name="ca_2" placeholder="ca_2" required="required" />
+                <input type="text" id="thal_2" name="thal_2" placeholder="thal_2" required="required" /><br><br>
+                <input type="text" id="thal_3" name="thal_3" placeholder="thal_3" required="required" /><br><br><br>
+                <button type="submit" class="button_css"><strong>Predict Heart Disease</strong></button>
+            </form>
+        </center>
+        <div id="prediction-result">
+            <center>
+                <h1>{{prediction_text}}</h1>
+            </center>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('prediction-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var formData = {
+                age: document.getElementById('age').value,
+                sex: document.getElementById('sex').value,
+                cp: document.getElementById('cp').value,
+                trestbps: document.getElementById('trestbps').value,
+                chol: document.getElementById('chol').value,
+                fbs: document.getElementById('fbs').value,
+                restecg: document.getElementById('restecg').value,
+                thalach: document.getElementById('thalach').value,
+                exang: document.getElementById('exang').value,
+                oldpeak: document.getElementById('oldpeak').value,
+                slope_1: document.getElementById('slope_1').value,
+                slope_2: document.getElementById('slope_2').value,
+                ca_1: document.getElementById('ca_1').value,
+                ca_2: document.getElementById('ca_2').value,
+                thal_2: document.getElementById('thal_2').value,
+                thal_3: document.getElementById('thal_3').value
+            };
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('prediction-result').innerHTML = '<center><h1>' + data.prediction_text + '</h1></center>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
